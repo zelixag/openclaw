@@ -21,6 +21,13 @@ describe("parseZalouserTextStyles", () => {
     });
   });
 
+  it("preserves backslash escapes inside code spans and fenced code blocks", () => {
+    expect(parseZalouserTextStyles("before `\\*` after\n```ts\n\\*\\_\\\\\n```")).toEqual({
+      text: "before `\\*` after\n\\*\\_\\\\",
+      styles: [],
+    });
+  });
+
   it("maps headings, block quotes, and lists into line styles", () => {
     expect(parseZalouserTextStyles(["# Title", "> quoted", "  - nested"].join("\n"))).toEqual({
       text: "Title\nquoted\nnested",
@@ -44,6 +51,13 @@ describe("parseZalouserTextStyles", () => {
   it("keeps unmatched fences literal", () => {
     expect(parseZalouserTextStyles("```python")).toEqual({
       text: "```python",
+      styles: [],
+    });
+  });
+
+  it("keeps unclosed fenced blocks literal until eof", () => {
+    expect(parseZalouserTextStyles("```python\n\\*not italic*\n_next_")).toEqual({
+      text: "```python\n\\*not italic*\n_next_",
       styles: [],
     });
   });

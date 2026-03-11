@@ -35,6 +35,7 @@ export async function sendImageZalouser(
 ): Promise<ZalouserSendResult> {
   return await sendMessageZalouser(threadId, options.caption ?? "", {
     ...options,
+    caption: undefined,
     mediaUrl: imageUrl,
   });
 }

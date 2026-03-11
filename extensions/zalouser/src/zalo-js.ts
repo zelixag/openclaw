@@ -20,6 +20,7 @@ import type {
 } from "./types.js";
 import {
   LoginQRCallbackEventType,
+  TextStyle,
   ThreadType,
   Zalo,
   type API,
@@ -151,7 +152,7 @@ function clampTextStyles(
       if (end <= start) {
         return null;
       }
-      if (style.st === "ind_$") {
+      if (style.st === TextStyle.Indent) {
         return {
           start,
           len: end - start,

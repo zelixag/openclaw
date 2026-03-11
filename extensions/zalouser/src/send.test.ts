@@ -99,11 +99,35 @@ describe("zalouser send helpers", () => {
       "cap",
       expect.objectContaining({
         profile: "p2",
-        caption: "_cap_",
+        caption: undefined,
         isGroup: false,
         mediaUrl: "https://example.com/a.png",
         textMode: "markdown",
         textStyles: [{ start: 0, len: 3, st: TextStyle.Italic }],
+      }),
+    );
+  });
+
+  it("does not keep the raw markdown caption as a media fallback after formatting", async () => {
+    mockSendText.mockResolvedValueOnce({ ok: true, messageId: "mid-2b" });
+
+    await sendImageZalouser("thread-2", "https://example.com/a.png", {
+      profile: "p2",
+      caption: "```\n```",
+      isGroup: false,
+      textMode: "markdown",
+    });
+
+    expect(mockSendText).toHaveBeenCalledWith(
+      "thread-2",
+      "",
+      expect.objectContaining({
+        profile: "p2",
+        caption: undefined,
+        isGroup: false,
+        mediaUrl: "https://example.com/a.png",
+        textMode: "markdown",
+        textStyles: undefined,
       }),
     );
   });

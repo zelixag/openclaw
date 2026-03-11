@@ -45,6 +45,11 @@ const INLINE_MARKERS: InlineMarker[] = [
     literal: true,
   },
   {
+    pattern: /\\([*_~#\\{}>+\-`])/g,
+    extractText: (match) => match[1],
+    literal: true,
+  },
+  {
     pattern: new RegExp(`\\{(${Object.keys(TAG_STYLE_MAP).join("|")})\\}(.+?)\\{/\\1\\}`, "g"),
     extractText: (match) => match[2],
     resolveStyles: (match) => {
@@ -88,13 +93,7 @@ export function parseZalouserTextStyles(input: string): { text: string; styles: 
   const allStyles: Style[] = [];
 
   const escapeMap: string[] = [];
-  const escapedInput = input.replace(/\\([*_~#\\{}>+\-`])/g, (_match, ch: string) => {
-    const index = escapeMap.length;
-    escapeMap.push(ch);
-    return `\x01${index}\x02`;
-  });
-
-  const lines = escapedInput.split("\n");
+  const lines = input.split("\n");
   const lineStyles: LineStyle[] = [];
   const processedLines: string[] = [];
   let inCodeBlock = false;
@@ -105,7 +104,8 @@ export function parseZalouserTextStyles(input: string): { text: string; styles: 
 
     if (/^```/.test(line)) {
       if (!inCodeBlock && !hasClosingFence(lines, lineIndex + 1)) {
-        processedLines.push(line);
+        processedLines.push(escapeLiteralText(line, escapeMap));
+        inCodeBlock = true;
         continue;
       }
       inCodeBlock = !inCodeBlock;
@@ -284,7 +284,7 @@ function hasClosingFence(lines: string[], startIndex: number): boolean {
 }
 
 function escapeLiteralText(input: string, escapeMap: string[]): string {
-  return input.replace(/[*_~{}`]/g, (ch) => {
+  return input.replace(/[\\*_~{}`]/g, (ch) => {
     const index = escapeMap.length;
     escapeMap.push(ch);
     return `\x01${index}\x02`;
