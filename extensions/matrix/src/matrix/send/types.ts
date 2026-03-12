@@ -88,6 +88,7 @@ export type MatrixSendOpts = {
   client?: import("../sdk.js").MatrixClient;
   cfg?: CoreConfig;
   mediaUrl?: string;
+  mediaLocalRoots?: readonly string[];
   accountId?: string;
   replyToId?: string;
   threadId?: string | number | null;

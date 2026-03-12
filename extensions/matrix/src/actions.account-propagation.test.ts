@@ -60,6 +60,7 @@ describe("matrixMessageActions account propagation", () => {
         accountId: "ops",
       }),
       expect.any(Object),
+      { mediaLocalRoots: undefined },
     );
   });
 
@@ -80,6 +81,7 @@ describe("matrixMessageActions account propagation", () => {
         accountId: "ops",
       }),
       expect.any(Object),
+      { mediaLocalRoots: undefined },
     );
   });
 
@@ -103,6 +105,7 @@ describe("matrixMessageActions account propagation", () => {
         avatarUrl: "mxc://example/avatar",
       }),
       expect.any(Object),
+      { mediaLocalRoots: undefined },
     );
   });
 
@@ -124,6 +127,32 @@ describe("matrixMessageActions account propagation", () => {
         avatarPath: "/tmp/avatar.jpg",
       }),
       expect.any(Object),
+      { mediaLocalRoots: undefined },
+    );
+  });
+
+  it("forwards mediaLocalRoots for media sends", async () => {
+    await matrixMessageActions.handleAction?.(
+      createContext({
+        action: "send",
+        accountId: "ops",
+        mediaLocalRoots: ["/tmp/openclaw-matrix-test"],
+        params: {
+          to: "room:!room:example",
+          message: "hello",
+          media: "file:///tmp/photo.png",
+        },
+      }),
+    );
+
+    expect(mocks.handleMatrixAction).toHaveBeenCalledWith(
+      expect.objectContaining({
+        action: "sendMessage",
+        accountId: "ops",
+        mediaUrl: "file:///tmp/photo.png",
+      }),
+      expect.any(Object),
+      { mediaLocalRoots: ["/tmp/openclaw-matrix-test"] },
     );
   });
 });

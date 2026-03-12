@@ -48,6 +48,7 @@ export type RoomTopicEventContent = {
 export type MatrixActionClientOpts = {
   client?: MatrixClient;
   cfg?: CoreConfig;
+  mediaLocalRoots?: readonly string[];
   timeoutMs?: number;
   accountId?: string | null;
   readiness?: "none" | "prepared" | "started";

@@ -93,7 +93,7 @@ export const matrixMessageActions: ChannelMessageActionAdapter = {
     return { to };
   },
   handleAction: async (ctx: ChannelMessageActionContext) => {
-    const { action, params, cfg, accountId } = ctx;
+    const { action, params, cfg, accountId, mediaLocalRoots } = ctx;
     const dispatch = async (actionParams: Record<string, unknown>) =>
       await handleMatrixAction(
         {
@@ -101,6 +101,7 @@ export const matrixMessageActions: ChannelMessageActionAdapter = {
           ...(accountId ? { accountId } : {}),
         },
         cfg as CoreConfig,
+        { mediaLocalRoots },
       );
     const resolveRoomId = () =>
       readStringParam(params, "roomId") ??

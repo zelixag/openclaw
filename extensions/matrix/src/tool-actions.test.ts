@@ -194,15 +194,39 @@ describe("handleMatrixAction pollVote", () => {
         threadId: "$thread",
       },
       cfg,
+      { mediaLocalRoots: ["/tmp/openclaw-matrix-test"] },
     );
 
     expect(mocks.sendMatrixMessage).toHaveBeenCalledWith("room:!room:example", "hello", {
       cfg,
       accountId: "ops",
       mediaUrl: undefined,
+      mediaLocalRoots: ["/tmp/openclaw-matrix-test"],
       replyToId: undefined,
       threadId: "$thread",
     });
+  });
+
+  it("passes mediaLocalRoots to profile updates", async () => {
+    const cfg = { channels: { matrix: { actions: { profile: true } } } } as CoreConfig;
+    await handleMatrixAction(
+      {
+        action: "setProfile",
+        accountId: "ops",
+        avatarPath: "/tmp/avatar.jpg",
+      },
+      cfg,
+      { mediaLocalRoots: ["/tmp/openclaw-matrix-test"] },
+    );
+
+    expect(mocks.applyMatrixProfileUpdate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        cfg,
+        account: "ops",
+        avatarPath: "/tmp/avatar.jpg",
+        mediaLocalRoots: ["/tmp/openclaw-matrix-test"],
+      }),
+    );
   });
 
   it("passes account-scoped opts to pin listing", async () => {

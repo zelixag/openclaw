@@ -129,6 +129,7 @@ function readNumericArrayParam(
 export async function handleMatrixAction(
   params: Record<string, unknown>,
   cfg: CoreConfig,
+  opts: { mediaLocalRoots?: readonly string[] } = {},
 ): Promise<AgentToolResult<unknown>> {
   const action = readStringParam(params, "action", { required: true });
   const accountId = readStringParam(params, "accountId") ?? undefined;
@@ -204,6 +205,7 @@ export async function handleMatrixAction(
         const threadId = readStringParam(params, "threadId");
         const result = await sendMatrixMessage(to, content, {
           mediaUrl: mediaUrl ?? undefined,
+          mediaLocalRoots: opts.mediaLocalRoots,
           replyToId: replyToId ?? undefined,
           threadId: threadId ?? undefined,
           ...clientOpts,
@@ -278,6 +280,7 @@ export async function handleMatrixAction(
       displayName: readStringParam(params, "displayName") ?? readStringParam(params, "name"),
       avatarUrl: readStringParam(params, "avatarUrl"),
       avatarPath,
+      mediaLocalRoots: opts.mediaLocalRoots,
     });
     return jsonResult({ ok: true, ...result });
   }

@@ -24,6 +24,7 @@ export async function applyMatrixProfileUpdate(params: {
   displayName?: string;
   avatarUrl?: string;
   avatarPath?: string;
+  mediaLocalRoots?: readonly string[];
 }): Promise<MatrixProfileUpdateResult> {
   const runtime = getMatrixRuntime();
   const persistedCfg = runtime.config.loadConfig() as CoreConfig;
@@ -41,6 +42,7 @@ export async function applyMatrixProfileUpdate(params: {
     displayName: displayName ?? undefined,
     avatarUrl: avatarUrl ?? undefined,
     avatarPath: avatarPath ?? undefined,
+    mediaLocalRoots: params.mediaLocalRoots,
   });
   const persistedAvatarUrl =
     synced.uploadedAvatarSource && synced.resolvedAvatarUrl ? synced.resolvedAvatarUrl : avatarUrl;

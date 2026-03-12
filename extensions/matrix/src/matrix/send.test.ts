@@ -232,8 +232,26 @@ describe("sendMessageMatrix media", () => {
     });
 
     expect(loadConfigMock).not.toHaveBeenCalled();
-    expect(loadWebMediaMock).toHaveBeenCalledWith("file:///tmp/photo.png", 1024 * 1024);
+    expect(loadWebMediaMock).toHaveBeenCalledWith("file:///tmp/photo.png", {
+      maxBytes: 1024 * 1024,
+      localRoots: undefined,
+    });
     expect(resolveTextChunkLimitMock).toHaveBeenCalledWith(explicitCfg, "matrix", "ops");
+  });
+
+  it("passes caller mediaLocalRoots to media loading", async () => {
+    const { client } = makeClient();
+
+    await sendMessageMatrix("room:!room:example", "caption", {
+      client,
+      mediaUrl: "file:///tmp/photo.png",
+      mediaLocalRoots: ["/tmp/openclaw-matrix-test"],
+    });
+
+    expect(loadWebMediaMock).toHaveBeenCalledWith("file:///tmp/photo.png", {
+      maxBytes: undefined,
+      localRoots: ["/tmp/openclaw-matrix-test"],
+    });
   });
 });
 

@@ -57,6 +57,7 @@ type SendMatrixMessage = (
     cfg?: OpenClawConfig;
     accountId?: string;
     mediaUrl?: string;
+    mediaLocalRoots?: readonly string[];
     replyToId?: string;
     threadId?: string;
     timeoutMs?: number;

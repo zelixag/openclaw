@@ -26,7 +26,10 @@ export async function updateMatrixOwnProfile(
         avatarPath: avatarPath || undefined,
         loadAvatarFromUrl: async (url, maxBytes) => await runtime.media.loadWebMedia(url, maxBytes),
         loadAvatarFromPath: async (path, maxBytes) =>
-          await runtime.media.loadWebMedia(path, maxBytes),
+          await runtime.media.loadWebMedia(path, {
+            maxBytes,
+            localRoots: opts.mediaLocalRoots,
+          }),
       });
     },
     "persist",
