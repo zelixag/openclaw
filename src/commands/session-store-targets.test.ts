@@ -1,11 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { resolveSessionStoreTargets } from "./session-store-targets.js";
+import { resolveSessionStoreTargets } from "../config/sessions/targets.js";
 
 const resolveStorePathMock = vi.hoisted(() => vi.fn());
 const resolveDefaultAgentIdMock = vi.hoisted(() => vi.fn());
 const listAgentIdsMock = vi.hoisted(() => vi.fn());
 
-vi.mock("../config/sessions.js", () => ({
+vi.mock("../config/sessions/paths.js", () => ({
   resolveStorePath: resolveStorePathMock,
 }));
 
